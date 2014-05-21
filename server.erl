@@ -66,15 +66,30 @@ update_client_timer(Pid, Clientlifetime, Clients) ->
   end.
 
 new_message(LogName, Number, Message, Deliveryqueue, Holdbackqueue, Dlqlimit) ->
-  NewHoldbackqueue = pushSL(Holdbackqueue, {Number, format("~s(~b); HBQ In: ~s", [Message, Number, timeMilliSecond()])}),
-  case lengthSL(Holdbackqueue) > Dlqlimit / 2 of
-    true ->
-      NewDeliveryqueue = fill_with_errors(LogName, Deliveryqueue, NewHoldbackqueue),
-      {NewerDeliveryqueue, NewerHoldbackqueue} = move_to_dlq(LogName, NewDeliveryqueue, NewHoldbackqueue),
-      NewestDeliveryqueue = shrink_dlq(LogName, NewerDeliveryqueue, Dlqlimit),
-      {NewestDeliveryqueue, NewerHoldbackqueue};
-    false ->
-      {Deliveryqueue, NewHoldbackqueue}
+  case findSL(Holdbackqueue, Number) of
+    {-1,nok} ->
+      case findSL(Deliveryqueue, Number) of
+        {-1,nok} ->
+          case Number > minNrSL(Deliveryqueue) of
+            true ->
+              NewHoldbackqueue = pushSL(Holdbackqueue, {Number, format("~s(~b); HBQ In: ~s", [Message, Number, timeMilliSecond()])}),
+              case lengthSL(Holdbackqueue) > Dlqlimit / 2 of
+                true ->
+                  NewDeliveryqueue = fill_with_errors(LogName, Deliveryqueue, NewHoldbackqueue),
+                  {NewerDeliveryqueue, NewerHoldbackqueue} = move_to_dlq(LogName, NewDeliveryqueue, NewHoldbackqueue),
+                  NewestDeliveryqueue = shrink_dlq(LogName, NewerDeliveryqueue, Dlqlimit),
+                  {NewestDeliveryqueue, NewerHoldbackqueue};
+                false ->
+                  {Deliveryqueue, NewHoldbackqueue}
+              end;
+            false ->
+              {Deliveryqueue, Holdbackqueue}
+          end;
+        _ ->
+          {Deliveryqueue, Holdbackqueue}
+      end;
+    _ ->
+      {Deliveryqueue, Holdbackqueue}
   end.
 
 
