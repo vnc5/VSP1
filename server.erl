@@ -83,7 +83,7 @@ fill_with_errors(LogName, Deliveryqueue, Holdbackqueue) ->
   Max = maxNrSL(Deliveryqueue),
   if
     Min - Max > 1 ->
-      logging(LogName, format("***Fehlernachricht fuer Nachrichtennummern ~b bis ~b um ~s~n", [Max, Min, timeMilliSecond()])),
+      logging(LogName, format("***Fehlernachricht fuer Nachrichtennummern ~b bis ~b um ~s~n", [Max + 1, Min - 1, timeMilliSecond()])),
       fill_with_errors_rec(Deliveryqueue, Min, Min - Max - 1);
     true ->
       Deliveryqueue
