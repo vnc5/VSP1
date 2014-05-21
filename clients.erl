@@ -8,8 +8,8 @@
 -export([start/1]).
 
 start(Host) ->
-  [Clients|[Lifetime|[Servername|[Sendeintervall|[]]]]] = read_config([clients, lifetime, servername, sendeintervall], "client.cfg"),
-  spawn_clients(Sendeintervall * 1000, {Servername, Host}, Lifetime * 1000, Clients).
+  [Clients|[Lifetime|[_|[Sendeintervall|[]]]]] = read_config([clients, lifetime, servername, sendeintervall], "client.cfg"),
+  spawn_clients(Sendeintervall * 1000, Host, Lifetime * 1000, Clients).
 
 spawn_clients(_, _, _, 0) -> ok;
 spawn_clients(Sendeintervall, Server, Lifetime, Client) ->

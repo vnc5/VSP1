@@ -1,7 +1,7 @@
 --------------------
 Compilieren der Dateien:
 --------------------
-Zu dem Paket gehören die Dateien
+Zu dem Paket gehï¿½ren die Dateien
 clients.erl;
 server.erl;
 werkzeug.erl;
@@ -20,15 +20,16 @@ Starten des Servers:
 % {lifetime, 60}. Zeit in Sekunden, die der Server bei Leerlauf wartet, bevor er sich beendet
 % {clientlifetime,5}. Zeitspanne, in der sich an den Client erinnert wird
 % {servername, wk}. Name des Servers als Atom
-% {dlqlimit, 13}. Größe der DLQ
+% {dlqlimit, 13}. Grï¿½ï¿½e der DLQ
 
 Starten des Clients:
 --------------------
 (w)erl -(s)name client -setcookie keks
-1> client_starter:start().
-2> net_adm:ping('server@lab33.cpt.haw-hamburg.de').
+1> net_adm:ping('server@lab33.cpt.haw-hamburg.de').
+2> global:whereis_name(wk).
+3> clients:start(global:whereis_name(wk)).
 
-% 'server@lab33.cpt.haw-hamburg.de': Name der Server Node (z.B.: server@lab21), erhält man zB über node()
+% 'server@lab33.cpt.haw-hamburg.de': Name der Server Node (z.B.: server@lab21), erhï¿½lt man zB ï¿½ber node()
 % ' wegen dem - bei haw-hamburg, da dies sonst als minus interpretiert wird.
 % in der client.cfg:
 % {clients, 2}.  Anzahl der Clients, die gestartet werden sollen

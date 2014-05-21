@@ -29,6 +29,7 @@ receive_client_request(MsgId, LogName, Servername, Lifetime, Clientlifetime, Del
         {-1, nok} ->
           Pid ! {message, 1, "nicht leere dummy-Nachricht", true};
         {NewerClientMsgId, Message} ->
+          logging(LogName, format("~s~n", [Message])),
           case maxNrSL(Deliveryqueue) > NewerClientMsgId of
             true ->
               Pid ! {message, NewerClientMsgId, Message, false};
