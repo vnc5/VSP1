@@ -106,7 +106,7 @@ move_to_dlq_rec(Deliveryqueue, Holdbackqueue, MovedMsgNumbers) ->
       {PopNum, PopMsg} = findSL(Holdbackqueue, Min),
       NewHoldbackqueue = popSL(Holdbackqueue),
       NewMovedMsgNumbers = [Min|MovedMsgNumbers],
-      move_to_dlq_rec(pushSL(Deliveryqueue, {PopNum, PopMsg}), NewHoldbackqueue, NewMovedMsgNumbers);
+      move_to_dlq_rec(pushSL(Deliveryqueue, {PopNum, format("~s DLQ In:~s", [PopMsg, timeMilliSecond()])}), NewHoldbackqueue, NewMovedMsgNumbers);
     true ->
       {Deliveryqueue, Holdbackqueue, MovedMsgNumbers}
   end.
