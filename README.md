@@ -1,2 +1,1 @@
-VSP1
-====
+# HAW-BAI5-VSP1 - Message of the Day
