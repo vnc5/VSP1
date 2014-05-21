@@ -18,6 +18,8 @@ spawn_clients(Sendeintervall, Server, Lifetime, Client) ->
   spawn_clients(Sendeintervall, Server, Lifetime, Client - 1).
 
 start_client(Sendeintervall, Server, Client) ->
+  {A1, A2, _} = now(),
+  random:seed(A1, A2, Client),
   {ok, Hostname} = inet:gethostname(),
   LogPrefix = format("~b-client@~s-~p-C-9-09: ", [Client, Hostname, self()]),
   LogName = format("Client~bclient@~s.log", [Client, Hostname]),
